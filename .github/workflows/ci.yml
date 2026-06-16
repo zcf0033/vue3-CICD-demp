@@ -1,0 +1,51 @@
+# ===== 工作流名称（显示在 GitHub Actions 页面） =====
+name: Vue3 + Vite CI
+
+# ===== 触发条件：什么时候自动跑 =====
+on:
+  # 当代码推送到指定分支时触发
+  push:
+    branches: [main]       # 只监听 main 分支
+
+# ===== 具体要执行的任务 =====
+jobs:
+  # 任务 ID（自定义名称，可以叫任意名字）
+  build-and-test:
+    # 运行环境：GitHub 提供的 Ubuntu 最新版虚拟机
+    runs-on: ubuntu-latest
+
+    # 任务步骤（从上到下顺序执行）
+    steps:
+      # ---- 步骤1：拉取代码 ----
+      - name: 拉取代码                    # 步骤名称（显示在 GitHub UI 里）
+        uses: actions/checkout@v4         # 用 GitHub 官方动作把仓库代码拉下来
+
+      # ---- 步骤2：安装 Node.js ----
+      - name: 安装 Node.js 18
+        uses: actions/setup-node@v4       # 用 GitHub 官方动作安装 Node.js
+        with:                              # 附带参数
+          node-version: 18                 # Node.js 版本
+          cache: 'npm'                     # 缓存 npm 依赖，下次跑更快
+
+      # ---- 步骤3：安装项目依赖 ----
+      - name: 安装依赖
+        run: npm ci                       # npm ci = 按 package-lock.json 精确安装（CI 专用，比 npm install 快）
+
+      # ---- 步骤4：代码检查 ----
+      - name: 代码规范检查
+        run: npm run lint                 # 执行 ESLint 检查
+
+      # ---- 步骤5：跑测试 ----
+      - name: 单元测试
+        run: npm run test                 # 执行 vitest run
+
+      # ---- 步骤6：打包 ----
+      - name: 构建打包
+        run: npm run build                # 执行 vite build，输出到 dist/
+
+      # ---- 步骤7：保存打包产物 ----
+      - name: 上传打包产物
+        uses: actions/upload-artifact@v4   # 用 GitHub 官方动作上传构建结果
+        with:
+          name: vue3-dist                  # 产物名称（后续下载时用）
+          path: dist/                      # 要上传的文件夹
