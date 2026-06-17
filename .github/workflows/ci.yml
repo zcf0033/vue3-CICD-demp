@@ -21,7 +21,7 @@ jobs:
         uses: actions/checkout@v4         # 用 GitHub 官方动作把仓库代码拉下来
 
       # ---- 步骤2：安装 Node.js ----
-      - name: 安装 Node.js 18
+      - name: 安装 Node.js 22
         uses: actions/setup-node@v4       # 用 GitHub 官方动作安装 Node.js
         with:                              # 附带参数
           node-version: 18                 # Node.js 版本
