@@ -24,7 +24,7 @@ jobs:
       - name: 安装 Node.js 22
         uses: actions/setup-node@v4       # 用 GitHub 官方动作安装 Node.js
         with:                              # 附带参数
-          node-version: 18                 # Node.js 版本
+          node-version: 22                 # Node.js 版本
           cache: 'npm'                     # 缓存 npm 依赖，下次跑更快
 
       # ---- 步骤3：安装项目依赖 ----
